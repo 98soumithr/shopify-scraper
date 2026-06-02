@@ -1,0 +1,36 @@
+name: Shopify Email Scraper
+
+on:
+  schedule:
+    - cron: '0 1 * * *'    # runs every night at 1am UTC
+  workflow_dispatch:         # lets you trigger manually anytime
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4
+
+      - name: Run domain finder
+        run: python find_domains.py
+
+      - name: Run email scraper
+        run: python scrape_emails.py
+
+      - name: Save results back to repo
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add domains.txt raw_leads.csv || true
+          git commit -m "Leads update $(date +'%Y-%m-%d')" || echo "Nothing to commit"
+          git push
