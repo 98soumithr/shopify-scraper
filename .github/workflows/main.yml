@@ -2,8 +2,8 @@ name: Shopify Email Scraper
 
 on:
   schedule:
-    - cron: '0 1 * * *'    # runs every night at 1am UTC
-  workflow_dispatch:         # lets you trigger manually anytime
+    - cron: '0 1 * * *'
+  workflow_dispatch:
 
 jobs:
   scrape:
@@ -16,13 +16,15 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
 
       - name: Install dependencies
         run: pip install requests beautifulsoup4
 
       - name: Run domain finder
         run: python find_domains.py
+        env:
+          SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
 
       - name: Run email scraper
         run: python scrape_emails.py
