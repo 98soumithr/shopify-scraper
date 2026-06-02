@@ -18,7 +18,8 @@ import requests
 
 # ── Config ─────────────────────────────────────────────────────────────────────
 
-SERPER_API_KEY = "YOUR_SERPER_API_KEY"   # free at serper.dev
+import os
+SERPER_API_KEY = os.environ.get("SERPER_API_KEY", "8be21707471b5b23f65f885070a0ec8c9aa91b48")  # free at serper.dev
 OUTPUT_FILE    = "domains.txt"
 DELAY_SECONDS  = 1.5
 
